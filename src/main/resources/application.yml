@@ -1,0 +1,12 @@
+logging:
+  file:
+    path: /tmp/msp/thread-service
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+  logback:
+    rollingpolicy:
+      max-history: 15
+      max-file-size: 50MB
