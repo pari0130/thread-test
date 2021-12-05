@@ -19,7 +19,7 @@ class MemberService {
         const val IDRIVE_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsib2F1dGgyLXJlc291cmNlIl0sInBlcm1pc3Npb25MZXZlbCI6MCwic29JZCI6ImlEcml2ZSIsImFwaV9rZXkiOnRydWUsInVzZXJfbmFtZSI6ImlEcml2ZUFwaUtleSIsImV4cCI6Mzc1MjEyNTQ0NCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9DTElFTlRfaURyaXZlQ3MiXSwianRpIjoiNWVhOTFlNDEtYmE4Ni00YmFiLTk3NjAtMmI1NmUxMjM5NTBjIiwiY2xpZW50X2lkIjoiaURyaXZlQ3MifQ.Nb8lreht9zSY9J4gjsV0RVa9TRK9Ho7_2fFXYyjoexQ"
     }
 
-    fun getMember(page: Int, size: Int){
+    fun getMember(page: Int, size: Int) : ArrayList<Map<String, Any?>>{
         log.info("[TEST] objects api get before")
 
         val results = ArrayList<Map<String, Any?>>()
@@ -47,6 +47,8 @@ class MemberService {
         log.info("[TEST] member api get after")
         log.info("[TEST] member api get check size - ${results.size}")
         log.info("[TEST] member api results check - ${results[0]}")
+
+        return results
     }
 
     fun anyBlockingTask(dto : Dto): Long {
