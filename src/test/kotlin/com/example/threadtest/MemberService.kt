@@ -51,7 +51,7 @@ class MemberService {
         return results
     }
 
-    fun anyBlockingTask(dto : Dto): Long {
+    fun getMemberBlockingTask(dto : Dto): Long {
         try {
             // sleep 0 ~ 10s
             Thread.sleep(SecureRandom().nextInt(10000).toLong());

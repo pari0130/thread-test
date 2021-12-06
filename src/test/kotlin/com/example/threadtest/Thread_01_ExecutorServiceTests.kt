@@ -1,77 +1,69 @@
 package com.example.threadtest
 
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.IsolationMode
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import org.slf4j.LoggerFactory
 import org.springframework.boot.test.context.SpringBootTest
-import java.security.SecureRandom
 import java.util.concurrent.*
 
-/**
- * 참고 학습 자료
- * completable : https://codechacha.com/ko/java-completable-future/
- * 비동기 기술 : https://jongmin92.github.io/2019/03/31/Java/java-async-1/
- * 코루틴 : https://kotlinworld.com/139
- * 스케줄링 : https://javacan.tistory.com/entry/Reactor-Start-6-Thread-Scheduling
- * 자바 executor : https://velog.io/@neity16/Java-8-4-%EC%9E%90%EB%B0%94-Concurrent-Executors-Callable-Future
- * */
-@SpringBootTest(classes = arrayOf(ThreadTestApplication::class))
-class Thread_01_ExecutorServiceTests {
+@SpringBootTest
+class Thread_01_ExecutorServiceTests : DescribeSpec(){
 
-    private val memberService = MemberService()
+    override fun isolationMode(): IsolationMode = IsolationMode.InstancePerLeaf
 
-    private val utils = Utils()
-
-    private val logger = LoggerFactory.getLogger(this::class.java)
-
-    private val parallelism = ForkJoinPool.commonPool().parallelism
-
-    // 코드 설명, 활용방안, 최종정리 순
-    @Test
-    @DisplayName("JAVA 병렬 - Executor")
-    fun javaThread(){
-        logger.info("[TEST] parallelism count -> $parallelism")
-
-        val es = Executors.newWorkStealingPool(parallelism)
-
-        try {
-            val task1 = Callable {
-                val random = utils.random()
-                memberService.anyBlockingTask(Dto(random, "test-$random"))
-            }
-            val task2 = Callable {
-                val random = utils.random()
-                memberService.anyBlockingTask(Dto(random, "test-$random"))
-            }
-            val task3 = Callable {
-                val random = utils.random()
-                memberService.anyBlockingTask(Dto(random, "test-$random"))
-            }
-            val task4 = Callable {
-                val random = utils.random()
-                memberService.anyBlockingTask(Dto(random, "test-$random"))
-            }
-
-            val results = es.invokeAll(arrayListOf(task1, task2, task3, task4))
+    companion object {
+        var memberService = MemberService()
+        var utils = Utils()
+        val logger = LoggerFactory.getLogger(this::class.java)
+        val parallelism = ForkJoinPool.commonPool().parallelism
+        var timeoutSec = 60
+        var exception = ""
+        fun shutdown(es : ExecutorService){
             es.shutdown()
-
-            for(result in results) {
-                logger.info("member seq : ${result.get()}")
-            }
-
-            if (!es.awaitTermination(10, TimeUnit.MINUTES)) {
+            if (!es.awaitTermination(timeoutSec.toLong(), TimeUnit.SECONDS)) {
                 es.shutdownNow()
             }
-        } catch (e: TimeoutException) {
-            es.shutdownNow()
-            logger.error("[TEST] TimeoutException error ", e.message)
-        } catch (ie: InterruptedException) {
-            es.shutdownNow()
-            Thread.currentThread().interrupt()
-            logger.error("[TEST] InterruptedException error ", ie.message)
-        } catch (e: Exception) {
-            es.shutdownNow()
-            logger.error("[TEST] Exception error ", e.message)
+        }
+    }
+
+    init {
+        this.describe("JAVA 병렬 테스트 - Executors") {
+            val es = Executors.newWorkStealingPool(parallelism)
+            val task1 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-1")) }
+            val task2 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-2")) }
+            val task3 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-3")) }
+            val task4 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-4")) }
+
+            it("병렬처리 parallelism 개수 테스트") {
+                parallelism shouldBeGreaterThanOrEqualTo 0 // >= 0
+            }
+
+            it("모든 작업이 정상 종료 될 경우") {
+                try {
+                    val results = es.invokeAll(arrayListOf(task1, task2, task3, task4), timeoutSec.toLong(), TimeUnit.SECONDS)
+                    shutdown(es)
+                    for (result in results) {
+                        logger.info("[TEST] member seq : ${result.get()}")
+                    }
+                    results.size shouldBeGreaterThanOrEqualTo 0 // >= 0
+                } catch (e : Exception) {
+                    es.shutdownNow()
+                    exception = e.message.toString()
+                    logger.error("[TEST] Exception error ", e.message)
+                }
+            }
+
+            it("타임아웃 이 초과 될 경우" ) {
+                try {
+                    timeoutSec = 1
+                    es.invokeAll(arrayListOf(task1, task2, task3, task4), timeoutSec.toLong(), TimeUnit.SECONDS)
+                } catch (e : CancellationException) {
+                    es.shutdownNow()
+                    exception = e.message.toString()
+                }
+                exception.length shouldBeGreaterThanOrEqualTo 0 // >= 0
+            }
         }
     }
 }
