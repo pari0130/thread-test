@@ -109,7 +109,7 @@ class Thread_04_ScheduersTests : BehaviorSpec(){
                     )
 
                 try {
-                    if(!countDownLatch.await(1L, TimeUnit.MICROSECONDS)){
+                    if(!countDownLatch.await(timeoutSec.toLong(), TimeUnit.MICROSECONDS)){
                         throw InterruptedException()
                     }
                 } catch (e: InterruptedException) {
