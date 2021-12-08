@@ -3,17 +3,12 @@ package com.example.threadtest
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.comparables.shouldBeGreaterThan
-import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.*
-import org.apache.commons.lang3.ThreadUtils
 import org.slf4j.LoggerFactory
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.concurrent.CancellationException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.concurrent.ForkJoinPool
-import java.util.concurrent.TimeUnit
 
 @SpringBootTest
 class Thread_03_CoroutineTests : BehaviorSpec(){
@@ -56,10 +51,10 @@ class Thread_03_CoroutineTests : BehaviorSpec(){
                 // SupervisorJob 을 통해 부모, 자식 job 간의 exception 영향도를 피할 수 있음
                 val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
                 val taskList = ArrayList<Long>()
-                val task1 = scope.async { blockingTask((Dto(utils.random(), "test-1"))) }
-                val task2 = scope.async { blockingTask((Dto(utils.random(), "test-2"))) }
-                val task3 = scope.async { blockingTask((Dto(utils.random(), "test-3"))) }
-                val task4 = scope.async { blockingTask((Dto(utils.random(), "test-4"))) }
+                val task1 = scope.async { blockingTask((Dto(utils.random(), "tester-1"))) }
+                val task2 = scope.async { blockingTask((Dto(utils.random(), "tester-2"))) }
+                val task3 = scope.async { blockingTask((Dto(utils.random(), "tester-3"))) }
+                val task4 = scope.async { blockingTask((Dto(utils.random(), "tester-4"))) }
 
                 // launch, suspend 를 통해 코루틴 블록을 생성 후 현재 스레드 차단없이 스레드 작업 공간을 공유
                 scope.launch {
@@ -77,10 +72,10 @@ class Thread_03_CoroutineTests : BehaviorSpec(){
                 // SupervisorJob 을 통해 부모, 자식 job 간의 exception 영향도를 피할 수 있음
                 val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
                 val taskList = ArrayList<Long>()
-                val task1 = scope.async { blockingTask((Dto(utils.random(), "test-1"))) }
-                val task2 = scope.async { blockingTask((Dto(utils.random(), "test-2"))) }
-                val task3 = scope.async { blockingTask((Dto(utils.random(), "test-3"))) }
-                val task4 = scope.async { blockingTask((Dto(utils.random(), "test-4"))) }
+                val task1 = scope.async { blockingTask((Dto(utils.random(), "tester-1"))) }
+                val task2 = scope.async { blockingTask((Dto(utils.random(), "tester-2"))) }
+                val task3 = scope.async { blockingTask((Dto(utils.random(), "tester-3"))) }
+                val task4 = scope.async { blockingTask((Dto(utils.random(), "tester-4"))) }
                 try {
                     withTimeout(timeoutSec.toLong()) {
                         // launch, suspend 를 통해 코루틴 블록을 생성 후 현재 스레드 차단없이 스레드 작업 공간을 공유

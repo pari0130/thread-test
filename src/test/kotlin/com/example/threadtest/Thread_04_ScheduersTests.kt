@@ -47,7 +47,7 @@ class Thread_04_ScheduersTests : BehaviorSpec(){
                 }
             }
 
-            `xwhen`("모든 작업이 정상 종료 될 경우") {
+            `when`("모든 작업이 정상 종료 될 경우") {
                 val tastList = ArrayList<String>()
 
                 Flux.fromIterable(memberService.getMember())
@@ -55,7 +55,7 @@ class Thread_04_ScheduersTests : BehaviorSpec(){
                     .runOn(Schedulers.elastic())
                     .map {
                         logger.info("[TEST] 스케줄러 thread -> ${Thread.currentThread().name}")
-                        tastList.add(it["userUuid"].toString())
+                        tastList.add(it.uuId)
                     }.subscribe(
                         { onNext ->
                             // logger.info("[TEST] response onNext result")
@@ -92,7 +92,7 @@ class Thread_04_ScheduersTests : BehaviorSpec(){
                     .map {
                         logger.info("[TEST] 스케줄러 thread -> ${Thread.currentThread().name}")
                         Thread.sleep(50000)
-                        tastList.add(it["userUuid"].toString())
+                        tastList.add(it.uuId)
                     }.subscribe(
                         { onNext ->
                             // logger.info("[TEST] response onNext result")

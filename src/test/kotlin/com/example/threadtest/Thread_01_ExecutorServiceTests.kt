@@ -2,9 +2,7 @@ package com.example.threadtest
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.comparables.shouldBeGreaterThan
-import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import io.kotest.matchers.shouldBe
 import org.slf4j.LoggerFactory
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,10 +25,10 @@ class Thread_01_ExecutorServiceTests : BehaviorSpec(){
     init {
         this.given("JAVA 병렬 테스트 - Executors") {
             val es = Executors.newFixedThreadPool(parallelism)
-            val task1 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-1")) }
-            val task2 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-2")) }
-            val task3 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-3")) }
-            val task4 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-4")) }
+            val task1 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "tester-1")) }
+            val task2 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "tester-2")) }
+            val task3 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "tester-3")) }
+            val task4 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "tester-4")) }
 
             `when`("병렬처리 parallelism 개수를 commonPool 개수로 지정한다") {
                 parallelism = ForkJoinPool.commonPool().parallelism

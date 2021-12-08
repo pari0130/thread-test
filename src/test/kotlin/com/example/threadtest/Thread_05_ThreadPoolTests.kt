@@ -2,7 +2,6 @@ package com.example.threadtest
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -36,10 +35,10 @@ class Thread_05_ThreadPoolTests : DescribeSpec(){
                     logger.info("[TEST] java version ${System.getProperty("java.version")}")
                     logger.info("[TEST] ========== work.join() start ==========")
 
-                    val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-1"))}, futurePool)
-                    val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-2"))}, futurePool)
-                    val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-3"))}, futurePool)
-                    val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-4"))}, futurePool)
+                    val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-1"))}, futurePool)
+                    val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-2"))}, futurePool)
+                    val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-3"))}, futurePool)
+                    val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-4"))}, futurePool)
 
                     CompletableFuture
                         .allOf(task1, task2, task3, task4)
@@ -61,10 +60,10 @@ class Thread_05_ThreadPoolTests : DescribeSpec(){
                     logger.info("[TEST] java version ${System.getProperty("java.version")}")
                     logger.info("[TEST] ========== work.join() start ==========")
 
-                    val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-1"))}, futurePool)
-                    val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-2"))}, futurePool)
-                    val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-3"))}, futurePool)
-                    val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-4"))}, futurePool)
+                    val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-1"))}, futurePool)
+                    val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-2"))}, futurePool)
+                    val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-3"))}, futurePool)
+                    val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-4"))}, futurePool)
 
                     CompletableFuture
                         .allOf(task1, task2, task3, task4)
@@ -88,16 +87,16 @@ class Thread_05_ThreadPoolTests : DescribeSpec(){
                 logger.info("[TEST] ========== work.join() start ==========")
 
                 val job1 = CoroutineScope(Dispatchers.IO).async {
-                    memberService.getMemberBlockingTask(Dto(utils.random(), "test-1"))
+                    memberService.getMemberBlockingTask(Dto(utils.random(), "tester-1"))
                 }
                 val job2 = CoroutineScope(Dispatchers.IO).async {
-                    memberService.getMemberBlockingTask(Dto(utils.random(), "test-2"))
+                    memberService.getMemberBlockingTask(Dto(utils.random(), "tester-2"))
                 }
                 val job3 = CoroutineScope(Dispatchers.IO).async {
-                    memberService.getMemberBlockingTask(Dto(utils.random(), "test-3"))
+                    memberService.getMemberBlockingTask(Dto(utils.random(), "tester-3"))
                 }
                 val job4 = CoroutineScope(Dispatchers.IO).async {
-                    memberService.getMemberBlockingTask(Dto(utils.random(), "test-4"))
+                    memberService.getMemberBlockingTask(Dto(utils.random(), "tester-4"))
                 }
                 logger.info("${job1.await()} ${job2.await()} ${job3.await()} ${job4.await()}")
 

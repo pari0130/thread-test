@@ -2,18 +2,13 @@ package com.example.threadtest
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.concurrent.*
 import java.util.function.Supplier
-import java.util.stream.Collectors
 import java.util.stream.Collectors.toList
 
 @SpringBootTest
@@ -55,10 +50,10 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
 
 
             `when`("모든 작업이 정상 종료 될 경우") {
-                val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-1"))},futurePool )
-                val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-2"))},futurePool )
-                val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-3"))},futurePool )
-                val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-4"))},futurePool )
+                val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-1"))},futurePool )
+                val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-2"))},futurePool )
+                val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-3"))},futurePool )
+                val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-4"))},futurePool )
 
                 CompletableFuture
                         .allOf(task1, task2, task3, task4)
@@ -77,7 +72,7 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
                         .map { member ->
                             CompletableFuture.supplyAsync ( Supplier{
                                 logger.info("thread -> ${Thread.currentThread().name}")
-                                "user -> ${member["userUuid"].toString()}"
+                                "user -> ${member.uuId}"
                             },futurePool )
                         }
                         .collect(toList())
@@ -94,10 +89,10 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
                 timeoutSec = 1
 
                 try {
-                    val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-1"))},futurePool )
-                    val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-2"))},futurePool )
-                    val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-3"))},futurePool )
-                    val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "test-4"))},futurePool )
+                    val task1 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-1"))},futurePool )
+                    val task2 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-2"))},futurePool )
+                    val task3 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-3"))},futurePool )
+                    val task4 = CompletableFuture.supplyAsync ( Supplier{memberService.getMemberBlockingTask(Dto(utils.random(), "tester-4"))},futurePool )
 
                     CompletableFuture
                         .allOf(task1, task2, task3, task4)
