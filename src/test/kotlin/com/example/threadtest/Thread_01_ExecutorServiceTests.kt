@@ -26,7 +26,7 @@ class Thread_01_ExecutorServiceTests : BehaviorSpec(){
 
     init {
         this.given("JAVA 병렬 테스트 - Executors") {
-            val es = Executors.newWorkStealingPool(parallelism)
+            val es = Executors.newFixedThreadPool(parallelism)
             val task1 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-1")) }
             val task2 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-2")) }
             val task3 = Callable { memberService.getMemberBlockingTask(Dto(utils.random(), "test-3")) }
@@ -62,10 +62,15 @@ class Thread_01_ExecutorServiceTests : BehaviorSpec(){
                 timeoutSec = 1
 
                 try {
-                    es.invokeAll(arrayListOf(task1, task2, task3, task4), timeoutSec.toLong(), TimeUnit.SECONDS)
-                } catch (e : CancellationException) {
+                    val results = es.invokeAll(arrayListOf(task1, task2, task3, task4), timeoutSec.toLong(), TimeUnit.SECONDS)
+
+                    shutdown(es)
+                    for (result in results) {
+                        logger.info("[TEST] member seq : ${result.get()}")
+                    }
+                } catch (e: CancellationException) {
                     es.shutdownNow()
-                    exception = e.message.toString()
+                    exception = e.toString()
                 }
 
                 then("exception message 가 정상 출력되어야 한다."){

@@ -33,8 +33,6 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
 
     init {
         this.given("JAVA 병렬 테스트 - Executors") {
-            val es = Executors.newWorkStealingPool(parallelism)
-
             `when`("병렬처리 parallelism 개수를 commonPool 개수로 지정한다") {
                 parallelism = ForkJoinPool.commonPool().parallelism
                 then("parallelism 개수가 0개 이상이 되어야 한다"){
@@ -67,7 +65,7 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
                         .orTimeout(timeoutSec.toLong(), TimeUnit.SECONDS)
                         .join()
 
-                shutdown(es)
+                shutdown(futurePool)
 
                 then("작업 목록 size 가 task 개수와 같아야 한다."){
                     listOf(task1, task2, task3, task4).size shouldBe 4 // >= 0
@@ -107,7 +105,7 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
                         .join()
 
                 } catch (e : CompletionException) {
-                    es.shutdownNow()
+                    futurePool.shutdownNow()
                     exception = e.message.toString()
                 }
 
@@ -119,10 +117,10 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
         }
     }
 
-    fun shutdown(es : ExecutorService){
-        es.shutdown()
-        if (!es.awaitTermination(timeoutSec.toLong(), TimeUnit.SECONDS)) {
-            es.shutdownNow()
+    fun shutdown(pool : ForkJoinPool){
+        pool.shutdown()
+        if (!pool.awaitTermination(timeoutSec.toLong(), TimeUnit.SECONDS)) {
+            pool.shutdownNow()
         }
     }
 }
