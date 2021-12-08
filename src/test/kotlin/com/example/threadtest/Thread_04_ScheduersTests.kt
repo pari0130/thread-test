@@ -50,7 +50,7 @@ class Thread_04_ScheduersTests : BehaviorSpec(){
             `xwhen`("모든 작업이 정상 종료 될 경우") {
                 val tastList = ArrayList<String>()
 
-                Flux.fromIterable(memberService.getMember(1, 100))
+                Flux.fromIterable(memberService.getMember())
                     .parallel(parallelism)
                     .runOn(Schedulers.elastic())
                     .map {
@@ -86,7 +86,7 @@ class Thread_04_ScheduersTests : BehaviorSpec(){
 
                 val tastList = ArrayList<String>()
 
-                Flux.fromIterable(memberService.getMember(2, 100))
+                Flux.fromIterable(memberService.getMember())
                     .parallel(parallelism)
                     .runOn(Schedulers.elastic())
                     .map {

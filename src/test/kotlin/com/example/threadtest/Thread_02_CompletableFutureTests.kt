@@ -73,7 +73,7 @@ class Thread_02_CompletableFutureTests : BehaviorSpec(){
             }
 
             `when`("LIST 데이터에 대한 100개 size 비동기 호출 시"){
-                val uuidList = memberService.getMember(1, 100).stream()
+                val uuidList = memberService.getMember().stream()
                         .map { member ->
                             CompletableFuture.supplyAsync ( Supplier{
                                 logger.info("thread -> ${Thread.currentThread().name}")
